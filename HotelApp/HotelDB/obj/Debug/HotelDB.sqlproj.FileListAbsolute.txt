@@ -2,9 +2,9 @@ C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\bin\Debug\Hote
 C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\bin\Debug\HotelDB.dll
 C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\bin\Debug\HotelDB.pdb
 C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\obj\Debug\HotelDB.sqlproj.AssemblyReference.cache
+C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\obj\Debug\HotelDB.dll
+C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\obj\Debug\HotelDB.pdb
 C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\obj\Debug\Model.xml
 C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\obj\Debug\refactor.xml
 C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\obj\Debug\postdeploy.sql
 C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\obj\Debug\predeploy.sql
-C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\obj\Debug\HotelDB.dll
-C:\Users\Andrew\Documents\GitHub\HotelManagement\HotelApp\HotelDB\obj\Debug\HotelDB.pdb

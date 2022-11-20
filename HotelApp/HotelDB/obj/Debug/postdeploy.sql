@@ -21,9 +21,9 @@ begin
 	('Single Bed','A room with a single bed',25.00);
 end
 
+-- If there are no record in the db then insert the default data
 if not exists(select 1 from dbo.Rooms)
 begin
-
 	declare @roomId1 int;
 	declare @roomId2 int;
 	declare @roomId3 int;
@@ -51,7 +51,6 @@ begin
 	(401, @roomId1),
 	(402, @roomId2),
 	(403, @roomId3),
-	(404, @roomId4);
-	
+	(404, @roomId4);	
 end
 GO
