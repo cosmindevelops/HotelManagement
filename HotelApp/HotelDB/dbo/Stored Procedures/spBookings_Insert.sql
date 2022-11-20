@@ -10,4 +10,5 @@ begin
 	
 	insert into dbo.Bookings (RoomId, GuestId, StartDate, EndDate, TotalCost)
 	values (@roomId, @guestId, @startDate, @endDate, @totalCost);
+	
 end

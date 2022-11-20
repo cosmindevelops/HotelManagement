@@ -1,20 +1,17 @@
 ﻿using HotelLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelLibrary.Data
 {
-	public class SqlData
+	public class SqlData : IDatabaseData
 	{
 		private readonly ISqlDataAccess _db;
 		private const string connectionStringName = "SqlDB";
+
 		public SqlData(ISqlDataAccess db)
 		{
 			_db = db;
 		}
+
 		public List<RoomTypeModel> GetAvailableRoomTypes(DateTime startDate, DateTime endDate)
 		{
 			return _db.LoadData<RoomTypeModel, dynamic>("dbo.spRoomTypes_GetAvailableTypes",
@@ -22,6 +19,7 @@ namespace HotelLibrary.Data
 											   connectionStringName,
 											   true);
 		}
+
 		public void BookGuest(DateTime startDate, DateTime endDate, int roomTypeId, string firstName, string lastName)
 		{
 			// We use 'LoadData' instead of 'SaveData' because we first check if the user is already in the db, if not we insert him
@@ -37,9 +35,8 @@ namespace HotelLibrary.Data
 																 false).First();
 
 			TimeSpan timeStaying = endDate.Date.Subtract(startDate.Date);
-			// timeStaying.TotalDays; -> returneaza fractii 
+			// timeStaying.TotalDays; -> returneaza fractii
 			// timeStaying.Days; -> returneaza un numar intreg
-
 
 			List<RoomModel> availableRooms = _db.LoadData<RoomModel, dynamic>("spRooms_GetAvailableRooms",
 																	 new { startDate, endDate, roomTypeId },
@@ -58,9 +55,15 @@ namespace HotelLibrary.Data
 				connectionStringName,
 				true);
 		}
+
 		public List<BookingFullModel> SearchBookings(string lastName)
 		{
 			return _db.LoadData<BookingFullModel, dynamic>("spBookings_Search", new { lastName, startDate = DateTime.Now.Date }, connectionStringName, true);
+		}
+
+		public void CheckInGuest(int bookingId)
+		{
+			_db.SaveData("dbo.spBookings_CheckIn", new { Id = bookingId }, connectionStringName, true);
 		}
 	}
 }

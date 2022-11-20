@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HotelLibrary.Models
+﻿namespace HotelLibrary.Models
 {
 	public class BookingFullModel
 	{
@@ -14,7 +8,7 @@ namespace HotelLibrary.Models
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
 		public bool CheckedIn { get; set; }
-		public decimal  TotalCost { get; set; }
+		public decimal TotalCost { get; set; }
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 		public string RoomNumber { get; set; }
@@ -22,6 +16,5 @@ namespace HotelLibrary.Models
 		public string Title { get; set; }
 		public string Description { get; set; }
 		public decimal Price { get; set; }
-		
 	}
 }
