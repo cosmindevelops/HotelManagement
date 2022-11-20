@@ -40,186 +40,98 @@ USE [$(DatabaseName)];
 
 
 GO
-IF EXISTS (SELECT 1
-           FROM   [master].[dbo].[sysdatabases]
-           WHERE  [name] = N'$(DatabaseName)')
-    BEGIN
-        ALTER DATABASE [$(DatabaseName)]
-            SET ARITHABORT ON,
-                CONCAT_NULL_YIELDS_NULL ON,
-                CURSOR_DEFAULT LOCAL 
-            WITH ROLLBACK IMMEDIATE;
-    END
+PRINT N'Creating Procedure [dbo].[spBookings_Insert]...';
 
 
 GO
-IF EXISTS (SELECT 1
-           FROM   [master].[dbo].[sysdatabases]
-           WHERE  [name] = N'$(DatabaseName)')
-    BEGIN
-        ALTER DATABASE [$(DatabaseName)]
-            SET PAGE_VERIFY NONE,
-                DISABLE_BROKER 
-            WITH ROLLBACK IMMEDIATE;
-    END
+CREATE PROCEDURE [dbo].[spBookings_Insert]
+	@roomId int,
+	@guestId int,
+	@startDate date,
+	@endDate date,
+	@totalCost money
+AS
+begin
+	set nocount on;
+	
+	insert into dbo.Bookings (RoomId, GuestId, StartDate, EndDate, TotalCost)
+	values (@roomId, @guestId, @startDate, @endDate, @totalCost);
+end
+GO
+PRINT N'Creating Procedure [dbo].[spGuests_Insert]...';
 
 
 GO
-ALTER DATABASE [$(DatabaseName)]
-    SET TARGET_RECOVERY_TIME = 0 SECONDS 
-    WITH ROLLBACK IMMEDIATE;
+CREATE PROCEDURE [dbo].[spGuests_Insert]
+	@firstName nvarchar(50),
+	@lastName nvarchar(50)
+AS
+begin
+	set nocount on;
+	
+	-- If the person does not exist then insert into the database
+	if not exists (select 1 from dbo.Guests where FirstName = @firstName and LastName=@lastName)
+	begin
+		insert into dbo.Guests(FirstName,LastName)
+		values(@firstName,@lastName)
+	end
+	
+	-- We use 'top 1' to ensure that we only get one row back
+	select top 1 [Id], [FirstName], [LastName]
+	from dbo.Guests
+	where FirstName = @firstName and LastName=@lastName
+end
+GO
+PRINT N'Creating Procedure [dbo].[spRooms_GetAvailableRooms]...';
 
 
 GO
-IF EXISTS (SELECT 1
-           FROM   [master].[dbo].[sysdatabases]
-           WHERE  [name] = N'$(DatabaseName)')
-    BEGIN
-        ALTER DATABASE [$(DatabaseName)]
-            SET QUERY_STORE (QUERY_CAPTURE_MODE = ALL, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 367), MAX_STORAGE_SIZE_MB = 100) 
-            WITH ROLLBACK IMMEDIATE;
-    END
+CREATE PROCEDURE [dbo].[spRooms_GetAvailableRooms]
+	@startDate date,
+	@endDate date,
+	@roomTypeId int
+AS
+begin
+	set nocount on;
+
+	select r.*
+	from dbo.Rooms r
+	inner join dbo.RoomTypes t on t.Id=r.RoomTypeId
+	where r.RoomTypeId = @roomTypeId
+	and r.Id not in (
+	select b.RoomId
+	from dbo.Bookings b
+	where (@startDate < b.StartDate and @endDate > b.EndDate)
+	or (b.StartDate <= @endDate and @endDate < b.EndDate)
+	or (b.StartDate <= @startDate and @startDate < b.EndDate)
+	);
+
+end
+GO
+PRINT N'Creating Procedure [dbo].[spRoomTypes_GetAvailableTypes]...';
 
 
 GO
-PRINT N'Rename refactoring operation with key 2aedd58c-4603-4723-9c92-d89f060b9308 is skipped, element [dbo].[Rooms].[NumberOfRooms] (SqlSimpleColumn) will not be renamed to RoomNumber';
+CREATE PROCEDURE [dbo].[spRoomTypes_GetAvailableTypes]
+	@startDate date,
+	@endDate date
+AS
+begin
+	set nocount on;
 
-
-GO
-PRINT N'Rename refactoring operation with key d0e7943c-8191-4182-83d9-727e7ed1edfc is skipped, element [dbo].[Rooms].[RoomTypesId] (SqlSimpleColumn) will not be renamed to RoomTypeId';
-
-
-GO
-PRINT N'Rename refactoring operation with key 7f44233b-9c1e-473c-9b33-9df4e5554afc is skipped, element [dbo].[FK_Rooms_ToTable] (SqlForeignKeyConstraint) will not be renamed to [FK_Rooms_RoomTypes]';
-
-
-GO
-PRINT N'Rename refactoring operation with key 7b0a9ed6-d64b-4641-be9e-731153c0d6dc is skipped, element [dbo].[Bookings].[Price] (SqlSimpleColumn) will not be renamed to TotalCost';
-
-
-GO
-PRINT N'Rename refactoring operation with key f245bdf5-64dd-49c8-8edf-fb5b613b0ca3 is skipped, element [dbo].[RoomTypes].[RoomType] (SqlSimpleColumn) will not be renamed to Title';
-
-
-GO
-PRINT N'Creating Table [dbo].[Bookings]...';
-
-
-GO
-CREATE TABLE [dbo].[Bookings] (
-    [Id]        INT   IDENTITY (1, 1) NOT NULL,
-    [RoomId]    INT   NOT NULL,
-    [GuestId]   INT   NOT NULL,
-    [StartDate] DATE  NOT NULL,
-    [EndDate]   DATE  NOT NULL,
-    [CheckedIn] BIT   NOT NULL,
-    [TotalCost] MONEY NOT NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-
-GO
-PRINT N'Creating Table [dbo].[Guests]...';
-
-
-GO
-CREATE TABLE [dbo].[Guests] (
-    [Id]        INT           IDENTITY (1, 1) NOT NULL,
-    [FirstName] NVARCHAR (50) NOT NULL,
-    [LastName]  NVARCHAR (50) NOT NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-
-GO
-PRINT N'Creating Table [dbo].[Rooms]...';
-
-
-GO
-CREATE TABLE [dbo].[Rooms] (
-    [Id]         INT IDENTITY (1, 1) NOT NULL,
-    [RoomNumber] INT NOT NULL,
-    [RoomTypeId] INT NOT NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-
-GO
-PRINT N'Creating Table [dbo].[RoomTypes]...';
-
-
-GO
-CREATE TABLE [dbo].[RoomTypes] (
-    [Id]          INT            IDENTITY (1, 1) NOT NULL,
-    [Title]       NVARCHAR (50)  NOT NULL,
-    [Description] NVARCHAR (200) NOT NULL,
-    [Price]       MONEY          NOT NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-
-GO
-PRINT N'Creating Default Constraint unnamed constraint on [dbo].[Bookings]...';
-
-
-GO
-ALTER TABLE [dbo].[Bookings]
-    ADD DEFAULT 0 FOR [CheckedIn];
-
-
-GO
-PRINT N'Creating Foreign Key [dbo].[FK_Bookings_Rooms]...';
-
-
-GO
-ALTER TABLE [dbo].[Bookings] WITH NOCHECK
-    ADD CONSTRAINT [FK_Bookings_Rooms] FOREIGN KEY ([RoomId]) REFERENCES [dbo].[Rooms] ([Id]);
-
-
-GO
-PRINT N'Creating Foreign Key [dbo].[FK_Bookings_Guests]...';
-
-
-GO
-ALTER TABLE [dbo].[Bookings] WITH NOCHECK
-    ADD CONSTRAINT [FK_Bookings_Guests] FOREIGN KEY ([GuestId]) REFERENCES [dbo].[Guests] ([Id]);
-
-
-GO
-PRINT N'Creating Foreign Key [dbo].[FK_Rooms_RoomTypes]...';
-
-
-GO
-ALTER TABLE [dbo].[Rooms] WITH NOCHECK
-    ADD CONSTRAINT [FK_Rooms_RoomTypes] FOREIGN KEY ([RoomTypeId]) REFERENCES [dbo].[RoomTypes] ([Id]);
-
-
-GO
--- Refactoring step to update target server with deployed transaction logs
-
-IF OBJECT_ID(N'dbo.__RefactorLog') IS NULL
-BEGIN
-    CREATE TABLE [dbo].[__RefactorLog] (OperationKey UNIQUEIDENTIFIER NOT NULL PRIMARY KEY)
-    EXEC sp_addextendedproperty N'microsoft_database_tools_support', N'refactoring log', N'schema', N'dbo', N'table', N'__RefactorLog'
-END
-GO
-IF NOT EXISTS (SELECT OperationKey FROM [dbo].[__RefactorLog] WHERE OperationKey = '55b17fd8-f48a-41a3-8150-c9be24a73039')
-INSERT INTO [dbo].[__RefactorLog] (OperationKey) values ('55b17fd8-f48a-41a3-8150-c9be24a73039')
-IF NOT EXISTS (SELECT OperationKey FROM [dbo].[__RefactorLog] WHERE OperationKey = '372e3fc0-4586-4cd9-9193-fd6ea0aad74d')
-INSERT INTO [dbo].[__RefactorLog] (OperationKey) values ('372e3fc0-4586-4cd9-9193-fd6ea0aad74d')
-IF NOT EXISTS (SELECT OperationKey FROM [dbo].[__RefactorLog] WHERE OperationKey = '2aedd58c-4603-4723-9c92-d89f060b9308')
-INSERT INTO [dbo].[__RefactorLog] (OperationKey) values ('2aedd58c-4603-4723-9c92-d89f060b9308')
-IF NOT EXISTS (SELECT OperationKey FROM [dbo].[__RefactorLog] WHERE OperationKey = 'd0e7943c-8191-4182-83d9-727e7ed1edfc')
-INSERT INTO [dbo].[__RefactorLog] (OperationKey) values ('d0e7943c-8191-4182-83d9-727e7ed1edfc')
-IF NOT EXISTS (SELECT OperationKey FROM [dbo].[__RefactorLog] WHERE OperationKey = '7f44233b-9c1e-473c-9b33-9df4e5554afc')
-INSERT INTO [dbo].[__RefactorLog] (OperationKey) values ('7f44233b-9c1e-473c-9b33-9df4e5554afc')
-IF NOT EXISTS (SELECT OperationKey FROM [dbo].[__RefactorLog] WHERE OperationKey = '7b0a9ed6-d64b-4641-be9e-731153c0d6dc')
-INSERT INTO [dbo].[__RefactorLog] (OperationKey) values ('7b0a9ed6-d64b-4641-be9e-731153c0d6dc')
-IF NOT EXISTS (SELECT OperationKey FROM [dbo].[__RefactorLog] WHERE OperationKey = 'f245bdf5-64dd-49c8-8edf-fb5b613b0ca3')
-INSERT INTO [dbo].[__RefactorLog] (OperationKey) values ('f245bdf5-64dd-49c8-8edf-fb5b613b0ca3')
-
-GO
-
+	select t.Id, t.Title, t.Description, t.Price
+	from dbo.Rooms r
+	inner join dbo.RoomTypes t on t.Id=r.RoomTypeId
+	where r.Id not in (
+	select b.RoomId
+	from dbo.Bookings b
+	where (@startDate < b.StartDate and @endDate > b.EndDate)
+	or (b.StartDate <= @endDate and @endDate < b.EndDate)
+	or (b.StartDate <= @startDate and @startDate < b.EndDate)
+	)
+	group by t.Id, t.Title, t.Description, t.Price;
+	
+end
 GO
 /*
 Post-Deployment Script Template							
@@ -277,22 +189,6 @@ begin
 	(404, @roomId4);	
 end
 GO
-
-GO
-PRINT N'Checking existing data against newly created constraints';
-
-
-GO
-USE [$(DatabaseName)];
-
-
-GO
-ALTER TABLE [dbo].[Bookings] WITH CHECK CHECK CONSTRAINT [FK_Bookings_Rooms];
-
-ALTER TABLE [dbo].[Bookings] WITH CHECK CHECK CONSTRAINT [FK_Bookings_Guests];
-
-ALTER TABLE [dbo].[Rooms] WITH CHECK CHECK CONSTRAINT [FK_Rooms_RoomTypes];
-
 
 GO
 PRINT N'Update complete.';
