@@ -40,97 +40,27 @@ USE [$(DatabaseName)];
 
 
 GO
-PRINT N'Creating Procedure [dbo].[spBookings_Insert]...';
+PRINT N'Creating Procedure [dbo].[spBookings_Search]...';
 
 
 GO
-CREATE PROCEDURE [dbo].[spBookings_Insert]
-	@roomId int,
-	@guestId int,
-	@startDate date,
-	@endDate date,
-	@totalCost money
+CREATE PROCEDURE [dbo].[spBookings_Search]
+	@lastName nvarchar(50),
+	@startDate date
 AS
 begin
 	set nocount on;
 	
-	insert into dbo.Bookings (RoomId, GuestId, StartDate, EndDate, TotalCost)
-	values (@roomId, @guestId, @startDate, @endDate, @totalCost);
-end
-GO
-PRINT N'Creating Procedure [dbo].[spGuests_Insert]...';
-
-
-GO
-CREATE PROCEDURE [dbo].[spGuests_Insert]
-	@firstName nvarchar(50),
-	@lastName nvarchar(50)
-AS
-begin
-	set nocount on;
-	
-	-- If the person does not exist then insert into the database
-	if not exists (select 1 from dbo.Guests where FirstName = @firstName and LastName=@lastName)
-	begin
-		insert into dbo.Guests(FirstName,LastName)
-		values(@firstName,@lastName)
-	end
-	
-	-- We use 'top 1' to ensure that we only get one row back
-	select top 1 [Id], [FirstName], [LastName]
-	from dbo.Guests
-	where FirstName = @firstName and LastName=@lastName
-end
-GO
-PRINT N'Creating Procedure [dbo].[spRooms_GetAvailableRooms]...';
-
-
-GO
-CREATE PROCEDURE [dbo].[spRooms_GetAvailableRooms]
-	@startDate date,
-	@endDate date,
-	@roomTypeId int
-AS
-begin
-	set nocount on;
-
-	select r.*
-	from dbo.Rooms r
-	inner join dbo.RoomTypes t on t.Id=r.RoomTypeId
-	where r.RoomTypeId = @roomTypeId
-	and r.Id not in (
-	select b.RoomId
+	select [b].[Id], [b].[RoomId], [b].[GuestId], [b].[StartDate], [b].[EndDate], [b].[CheckedIn], [b].[TotalCost],
+	[g].[FirstName], [g].[LastName],
+	[r].[RoomNumber], [r].[RoomTypeId],
+	[rt].[Title], [rt].[Description], [rt].[Price]
 	from dbo.Bookings b
-	where (@startDate < b.StartDate and @endDate > b.EndDate)
-	or (b.StartDate <= @endDate and @endDate < b.EndDate)
-	or (b.StartDate <= @startDate and @startDate < b.EndDate)
-	);
+	inner join dbo.Guests g on b.GuestId = g.Id
+	inner join dbo.Rooms r on b.RoomId = r.Id
+	inner join dbo.RoomTypes rt on r.RoomTypeId = rt.Id
+	where b.StartDate = @startDate and g.LastName = @lastName;
 
-end
-GO
-PRINT N'Creating Procedure [dbo].[spRoomTypes_GetAvailableTypes]...';
-
-
-GO
-CREATE PROCEDURE [dbo].[spRoomTypes_GetAvailableTypes]
-	@startDate date,
-	@endDate date
-AS
-begin
-	set nocount on;
-
-	select t.Id, t.Title, t.Description, t.Price
-	from dbo.Rooms r
-	inner join dbo.RoomTypes t on t.Id=r.RoomTypeId
-	where r.Id not in (
-	select b.RoomId
-	from dbo.Bookings b
-	where (@startDate < b.StartDate and @endDate > b.EndDate)
-	or (b.StartDate <= @endDate and @endDate < b.EndDate)
-	or (b.StartDate <= @startDate and @startDate < b.EndDate)
-	)
-	group by t.Id, t.Title, t.Description, t.Price;
-	
 end
 GO
 /*

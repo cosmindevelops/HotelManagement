@@ -22,7 +22,7 @@ namespace HotelLibrary.Data
 											   connectionStringName,
 											   true);
 		}
-		public void BookGuest(DateTime startDate, DateTime endDate, int roomTypeId, string firstName, string lastName) 
+		public void BookGuest(DateTime startDate, DateTime endDate, int roomTypeId, string firstName, string lastName)
 		{
 			// We use 'LoadData' instead of 'SaveData' because we first check if the user is already in the db, if not we insert him
 			// and we need the guestId to make the reservation
@@ -47,8 +47,8 @@ namespace HotelLibrary.Data
 																	 true);
 
 			_db.SaveData("spBookings_Insert",
-				new 
-				{ 
+				new
+				{
 					roomId = availableRooms.First().Id,
 					guestId = guest.Id,
 					startDate = startDate,
@@ -57,6 +57,10 @@ namespace HotelLibrary.Data
 				},
 				connectionStringName,
 				true);
+		}
+		public List<BookingFullModel> SearchBookings(string lastName)
+		{
+			return _db.LoadData<BookingFullModel, dynamic>("spBookings_Search", new { lastName, startDate = DateTime.Now.Date }, connectionStringName, true);
 		}
 	}
 }
