@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTO
 {
+    //Must Delete
     public class BookingDTO
     {
         public int Id { get; set; }

@@ -24,7 +24,7 @@ namespace Application.Rooms.Commands.Update
             var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(request.Id);
             if (room == null)
             {
-                throw new RoomNotFoundException($"Room with id {request.Id} not found.");
+                throw new RoomNotFoundException(request.Id);
             }
 
             room.RoomNumber = request.RoomNumber;

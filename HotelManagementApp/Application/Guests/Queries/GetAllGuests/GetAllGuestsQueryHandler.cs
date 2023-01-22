@@ -1,5 +1,8 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Application.DTO;
+using Application.Guests.DTO;
+using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using System;
@@ -10,24 +13,25 @@ using System.Threading.Tasks;
 
 namespace Application.Guests.Queries.GetAllGuests
 {
-    public class GetAllGuestsQueryHandler : IRequestHandler<GetAllGuestsQuery, IEnumerable<GuestDTO>>
+    public class GetAllGuestsQueryHandler : IRequestHandler<GetAllGuestsQuery, IEnumerable<GuestGetDTO>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public GetAllGuestsQueryHandler(IUnitOfWork unitOfWork)
+        public GetAllGuestsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GuestDTO>> Handle(GetAllGuestsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GuestGetDTO>> Handle(GetAllGuestsQuery request, CancellationToken cancellationToken)
         {
-            IEnumerable<Guest> guests = await _unitOfWork.GuestRepository.GetAllGuestsAsync();
-            return guests.Select(g => new GuestDTO
+            var guests = await _unitOfWork.GuestRepository.GetAllGuestsAsync();
+            if(guests == null)
             {
-                Id = g.Id,
-                FirstName = g.FirstName,
-                LastName = g.LastName
-            });
+                throw new GuestNotFoundException();
+            }
+            return _mapper.Map<IEnumerable<GuestGetDTO>>(guests);
         }
     }
 }

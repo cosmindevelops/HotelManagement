@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.RoomTypes.DTO;
+using Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,13 @@ using System.Threading.Tasks;
 
 namespace Application.RoomTypes.Commands.Delete
 {
-    public class DeleteRoomTypeCommand : IRequest<RoomType>
+    public class DeleteRoomTypeCommand : IRequest<RoomTypeGetDTO>
     {
         public int Id { get; set; }
+
+        public DeleteRoomTypeCommand(int id)
+        {
+            Id = id;
+        }
     }
 }

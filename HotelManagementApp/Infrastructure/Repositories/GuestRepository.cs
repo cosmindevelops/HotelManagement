@@ -18,7 +18,7 @@ namespace Infrastructure.Repositories
             return await _context.Guests.FindAsync(id);
         }
 
-        public async Task<List<Guest>> GetAllGuestsAsync()
+        public async Task<IEnumerable<Guest>> GetAllGuestsAsync()
         {
             return await _context.Guests.ToListAsync();
         }

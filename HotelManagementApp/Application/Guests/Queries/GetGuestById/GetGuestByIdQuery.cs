@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Guests.DTO;
+using Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,13 @@ using System.Threading.Tasks;
 
 namespace Application.Guests.Queries.GetGuestById
 {
-    public class GetGuestByIdQuery : IRequest<Guest>
+    public class GetGuestByIdQuery : IRequest<GuestGetDTO>
     {
         public int Id { get; set; }
+
+        public GetGuestByIdQuery(int id)
+        {
+            Id = id;
+        }
     }
 }

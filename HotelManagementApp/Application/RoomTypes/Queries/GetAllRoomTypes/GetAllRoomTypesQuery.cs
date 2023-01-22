@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.RoomTypes.DTO;
+using Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.RoomTypes.Queries.GetAllRoomTypes
 {
-    public class GetAllRoomTypesQuery : IRequest<IEnumerable<RoomType>>
+    public class GetAllRoomTypesQuery : IRequest<IEnumerable<RoomTypeGetDTO>>
     {
     }
 }

@@ -3,18 +3,14 @@
     public class GuestNotFoundException : Exception
     {
         public GuestNotFoundException()
-        : base()
+        : base("Guest not found.")
         {
         }
 
-        public GuestNotFoundException(string message)
-            : base(message)
+        public GuestNotFoundException(int id)
+            : base($"Guest with id {id} not found.")
         {
         }
 
-        public GuestNotFoundException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
     }
 }

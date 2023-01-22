@@ -6,7 +6,7 @@ namespace Application.Common.Interfaces
     {
         Task<Guest> GetGuestByIdAsync(int id);
 
-        Task<List<Guest>> GetAllGuestsAsync();
+        Task<IEnumerable<Guest>> GetAllGuestsAsync();
 
         Task AddGuestAsync(Guest guest);
 

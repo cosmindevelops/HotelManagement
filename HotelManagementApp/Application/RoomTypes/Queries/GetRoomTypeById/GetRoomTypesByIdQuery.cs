@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.RoomTypes.DTO;
+using Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,12 @@ using System.Threading.Tasks;
 
 namespace Application.RoomTypes.Queries.GetRoomTypeById
 {
-    public class GetRoomTypeByIdQuery : IRequest<RoomType>
+    public class GetRoomTypeByIdQuery : IRequest<RoomTypeGetDTO>
     {
         public int Id { get; set; }
+        public GetRoomTypeByIdQuery(int id)
+        {
+            Id = id;
+        }
     }
 }

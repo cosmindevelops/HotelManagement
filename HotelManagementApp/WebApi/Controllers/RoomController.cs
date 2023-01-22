@@ -5,6 +5,8 @@ using Application.Rooms.Commands.Delete;
 using Application.Rooms.Commands.Update;
 using Application.Rooms.Queries.GetAllRooms;
 using Application.Rooms.Queries.GetRoomById;
+using Application.RoomTypes.Queries.GetRoomTypeById;
+using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,12 @@ namespace WebApi.Controllers
     public class RoomController : ControllerBase
     {
         private readonly IMediator _mediator;
+        //private readonly IMapper _mapper;
 
         public RoomController(IMediator mediator)
         {
             _mediator = mediator;
+           // _mapper = mapper;
         }
 
         [HttpGet]
@@ -34,6 +38,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetRoomById(int id)
         {
             var room = await _mediator.Send(new GetRoomByIdQuery { Id = id });
+
             if (room == null)
             {
                 return NotFound();

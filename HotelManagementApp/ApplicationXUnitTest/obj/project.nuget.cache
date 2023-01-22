@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "70J5wEZikauMPibBDST1JaUeg6twgWMk+y2VuaOF+JIwtjdJlbO8LgUInMRpkseviUu3GKh+CM60x1uZ+Fgeuw==",
+  "dgSpecHash": "cx6NXAYh4yKiux/rPgts+zr/dR12ZQcajcAhnkW7uQQCxQE19BhVgfHOy3Z5d92DxXPzKVplpgouqyA7PZ+e0A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Andrew\\Documents\\GitHub\\Amdaris\\Projects\\HotelManagementApp\\ApplicationXUnitTest\\Application.XUnitTest.csproj",
+  "projectFilePath": "C:\\Users\\Andrew\\Desktop\\Amdaris\\EF Core\\HotelManagementApp\\ApplicationXUnitTest\\Application.XUnitTest.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Andrew\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
     "C:\\Users\\Andrew\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",

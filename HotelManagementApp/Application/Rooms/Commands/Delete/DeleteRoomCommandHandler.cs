@@ -24,7 +24,7 @@ namespace Application.Rooms.Commands.Delete
             var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(request.Id);
             if (room == null)
             {
-                throw new RoomNotFoundException($"Room with id {request.Id} not found.");
+                throw new RoomNotFoundException(request.Id);
             }
 
             await _unitOfWork.RoomRepository.DeleteRoomAsync(request.Id);

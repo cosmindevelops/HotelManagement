@@ -15,11 +15,13 @@ namespace Infrastructure.Repositories
 
         public async Task<RoomType> GetRoomTypeByIdAsync(int id)
         {
+            
             return await _context.RoomTypes.FirstOrDefaultAsync(rt => rt.Id == id);
         }
 
-        public async Task<List<RoomType>> GetAllRoomTypesAsync()
+        public async Task<IEnumerable<RoomType>> GetAllRoomTypesAsync()
         {
+
             return await _context.RoomTypes.ToListAsync();
         }
 

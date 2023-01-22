@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
+using Infrastructure.Repositories;
 
 namespace Infrastructure.InMemoryRepository
 {
@@ -17,9 +18,10 @@ namespace Infrastructure.InMemoryRepository
             return Task.FromResult(_roomTypes.SingleOrDefault(rt => rt.Id == id));
         }
 
-        public Task<List<RoomType>> GetAllRoomTypesAsync()
+        public Task<IEnumerable<RoomType>> GetAllRoomTypesAsync()
         {
-            return Task.FromResult(_roomTypes);
+            return Task.FromResult(_roomTypes.AsEnumerable());
+            
         }
 
         public Task AddRoomTypeAsync(RoomType roomType)

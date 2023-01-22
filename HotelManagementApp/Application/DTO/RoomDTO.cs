@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Application.DTO
 {
+    //Must Delete
     public class RoomDTO
     {
         public int Id { get; set; }
         public int RoomNumber { get; set; }
         public int RoomTypeId { get; set; }
-        public RoomTypeDTO RoomType { get; set; }
     }
 }

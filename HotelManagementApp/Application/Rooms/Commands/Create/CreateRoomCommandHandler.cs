@@ -22,10 +22,6 @@ namespace Application.Rooms.Commands.Create
         public async Task<Room> Handle(CreateRoomCommand request, CancellationToken cancellationToken)
         {
             var roomType = await _unitOfWork.RoomTypeRepository.GetRoomTypeByIdAsync(request.RoomTypeId);
-            if (roomType == null)
-            {
-                throw new RoomTypeNotFoundException($"RoomType with id {request.RoomTypeId} not found.");
-            }
 
             Room room = new Room
             {
