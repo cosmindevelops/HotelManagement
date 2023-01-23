@@ -4,11 +4,6 @@ using Application.Guests.DTO;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Guests.Commands.Create
 {
@@ -31,8 +26,8 @@ namespace Application.Guests.Commands.Create
             }
             var guest = _mapper.Map<Guest>(request.Guest);
             await _unitOfWork.GuestRepository.AddGuestAsync(guest);
+            await _unitOfWork.SaveAsync();
             return _mapper.Map<GuestPostDTO>(guest);
         }
     }
-
 }

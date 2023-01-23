@@ -1,17 +1,12 @@
 ﻿using Application.Common.Exceptions;
-using Application.DTO;
 using Application.RoomTypes.Commands.Create;
 using Application.RoomTypes.Commands.Delete;
 using Application.RoomTypes.Commands.Update;
-using Application.RoomTypes.DTO;
 using Application.RoomTypes.Queries.GetAllRoomTypes;
 using Application.RoomTypes.Queries.GetRoomTypeById;
 using AutoMapper;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WebApi.Controllers
 {
@@ -20,13 +15,13 @@ namespace WebApi.Controllers
     public class RoomTypeController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public RoomTypeController(IMediator mediator,IMapper mapper)
+        public RoomTypeController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
+
         }
+
         //DONE
         [HttpGet]
         public async Task<IActionResult> GetAllRoomTypes()
@@ -88,7 +83,7 @@ namespace WebApi.Controllers
         //DONE
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateRoomTypeCommand command)
+        public async Task<IActionResult> UpdateRoomType(int id, [FromBody] UpdateRoomTypeCommand command)
         {
             try
             {

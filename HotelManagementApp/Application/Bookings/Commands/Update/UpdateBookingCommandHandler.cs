@@ -1,40 +1,36 @@
-﻿using Application.Common.Exceptions;
+﻿using Application.Bookings.DTO;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Bookings.Commands.Update
 {
-    public class UpdateBookingCommandHandler : IRequestHandler<UpdateBookingCommand, Booking>
+    public class UpdateBookingCommandHandler : IRequestHandler<UpdateBookingCommand, BookingPutDTO>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public UpdateBookingCommandHandler(IUnitOfWork unitOfWork)
-        {
+        public UpdateBookingCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        { 
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<Booking> Handle(UpdateBookingCommand request, CancellationToken cancellationToken)
+        public async Task<BookingPutDTO> Handle(UpdateBookingCommand request, CancellationToken cancellationToken)
         {
             var booking = await _unitOfWork.BookingRepository.GetBookingByIdAsync(request.Id);
             if (booking == null)
             {
-                throw new ObjectNotFoundException($"Booking with ID '{request.Id}' not found.");
+                throw new ObjectNotFoundException(nameof(RoomType), request.Id);
             }
-            booking.RoomId = request.RoomId;
-            booking.GuestId = request.GuestId;
-            booking.StartDate = request.StartDate;
-            booking.EndDate = request.EndDate;
-            booking.CheckedIn = request.CheckedIn;
-            booking.TotalCost = request.TotalCost;
+
+            _mapper.Map(request, booking);
             await _unitOfWork.BookingRepository.UpdateBookingAsync(booking);
             await _unitOfWork.SaveAsync();
-            return booking;
+
+            return _mapper.Map<BookingPutDTO>(booking);
         }
     }
 }

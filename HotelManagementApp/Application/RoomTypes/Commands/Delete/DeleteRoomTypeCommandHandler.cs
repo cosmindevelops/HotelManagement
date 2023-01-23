@@ -4,11 +4,6 @@ using Application.RoomTypes.DTO;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.RoomTypes.Commands.Delete
 {
@@ -27,11 +22,11 @@ namespace Application.RoomTypes.Commands.Delete
         {
             var roomType = await _unitOfWork.RoomTypeRepository.GetRoomTypeByIdAsync(request.Id);
 
-            if (roomType == null) 
+            if (roomType == null)
             {
                 throw new ObjectNotFoundException(nameof(RoomType), request.Id);
             }
-                
+
             await _unitOfWork.RoomTypeRepository.DeleteRoomTypeAsync(roomType.Id);
             await _unitOfWork.SaveAsync();
 

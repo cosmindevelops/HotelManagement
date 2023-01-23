@@ -1,36 +1,36 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Rooms.DTO;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AutoMapper;
 
 namespace Application.Rooms.Commands.Delete
 {
-    public class DeleteRoomCommandHandler : IRequestHandler<DeleteRoomCommand, Room>
+    public class DeleteRoomCommandHandler : IRequestHandler<DeleteRoomCommand, RoomGetDTO>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public DeleteRoomCommandHandler(IUnitOfWork unitOfWork)
+        public DeleteRoomCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<Room> Handle(DeleteRoomCommand request, CancellationToken cancellationToken)
+        public async Task<RoomGetDTO> Handle(DeleteRoomCommand request, CancellationToken cancellationToken)
         {
             var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(request.Id);
+            
             if (room == null)
             {
-                throw new RoomNotFoundException(request.Id);
+                throw new ObjectNotFoundException(nameof(RoomType), request.Id);
             }
 
             await _unitOfWork.RoomRepository.DeleteRoomAsync(request.Id);
             await _unitOfWork.SaveAsync();
-
-            return room;
+            
+            return _mapper.Map<RoomGetDTO>(room);
         }
     }
 }

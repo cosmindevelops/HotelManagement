@@ -1,6 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
-using Infrastructure.Repositories;
 
 namespace Infrastructure.InMemoryRepository
 {
@@ -13,41 +12,40 @@ namespace Infrastructure.InMemoryRepository
             _roomTypes = new List<RoomType>();
         }
 
-        public Task<RoomType> GetRoomTypeByIdAsync(int id)
+        public async Task<RoomType> GetRoomTypeByIdAsync(int id)
         {
-            return Task.FromResult(_roomTypes.SingleOrDefault(rt => rt.Id == id));
+            return await Task.FromResult(_roomTypes.SingleOrDefault(rt => rt.Id == id));
         }
 
-        public Task<IEnumerable<RoomType>> GetAllRoomTypesAsync()
+        public async Task<IEnumerable<RoomType>> GetAllRoomTypesAsync()
         {
-            return Task.FromResult(_roomTypes.AsEnumerable());
-            
+            return await Task.FromResult(_roomTypes.AsEnumerable());
         }
 
-        public Task AddRoomTypeAsync(RoomType roomType)
+        public async Task AddRoomTypeAsync(RoomType roomType)
         {
             _roomTypes.Add(roomType);
-            return Task.CompletedTask;
+             await Task.CompletedTask;
         }
 
-        public Task UpdateRoomTypeAsync(RoomType roomType)
+        public async Task UpdateRoomTypeAsync(RoomType roomType)
         {
             var index = _roomTypes.FindIndex(rt => rt.Id == roomType.Id);
             if (index != -1)
             {
                 _roomTypes[index] = roomType;
             }
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
-        public Task DeleteRoomTypeAsync(int id)
+        public async Task DeleteRoomTypeAsync(int id)
         {
             var index = _roomTypes.FindIndex(rt => rt.Id == id);
             if (index != -1)
             {
                 _roomTypes.RemoveAt(index);
             }
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
     }
 }

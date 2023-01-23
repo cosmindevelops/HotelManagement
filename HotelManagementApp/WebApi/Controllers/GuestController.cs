@@ -1,14 +1,11 @@
 ﻿using Application.Common.Exceptions;
-using Application.DTO;
 using Application.Guests.Commands.Create;
 using Application.Guests.Commands.Delete;
 using Application.Guests.Commands.Update;
 using Application.Guests.DTO;
-using Application.Guests.Queries;
 using Application.Guests.Queries.GetAllGuests;
 using Application.Guests.Queries.GetGuestById;
 using AutoMapper;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,6 +44,7 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
         //DONE
         [HttpGet]
         public async Task<IActionResult> GetAllGuests()
@@ -87,8 +85,7 @@ namespace WebApi.Controllers
             }
         }
 
-
-        //TODO - need ckeck
+        //DONE
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> UpdateGuest(int id, [FromBody] UpdateGuestCommand command)
@@ -108,7 +105,7 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        
+
         //DONE
         [HttpDelete]
         [Route("{id}")]

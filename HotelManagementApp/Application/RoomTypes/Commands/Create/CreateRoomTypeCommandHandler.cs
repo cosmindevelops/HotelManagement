@@ -4,11 +4,6 @@ using Application.RoomTypes.DTO;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.RoomTypes.Commands.Create
 {
@@ -30,6 +25,7 @@ namespace Application.RoomTypes.Commands.Create
                 throw new InvalidRoomTypeException();
             }
             var roomType = _mapper.Map<RoomType>(request.RoomType);
+            
             await _unitOfWork.RoomTypeRepository.AddRoomTypeAsync(roomType);
             await _unitOfWork.SaveAsync();
             return _mapper.Map<RoomTypePostDTO>(roomType);

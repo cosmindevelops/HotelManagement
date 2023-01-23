@@ -1,15 +1,10 @@
 ﻿using Application.Rooms.Commands.Create;
+using Application.Rooms.Commands.Delete;
 using Application.Rooms.Commands.Update;
 using Application.Rooms.DTO;
-using Application.Rooms.Queries.GetAllRooms;
 using Application.Rooms.Queries.GetRoomById;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Profiles
 {
@@ -17,10 +12,22 @@ namespace Application.Profiles
     {
         public RoomProfile()
         {
-            CreateMap<CreateRoomCommand, RoomPostDTO>();
-            CreateMap<UpdateRoomCommand, RoomPutDTO>();
-            //CreateMap<Room, RoomGetDTO>()
-            //    .ForMember(dest => dest.RoomType, opt => opt.MapFrom(src => src.RoomType));
+
+            CreateMap<Room, RoomGetDTO>();
+            CreateMap<RoomGetDTO, Room>();
+            CreateMap<RoomPostDTO, Room>();
+            CreateMap<Room, RoomPostDTO>();
+            CreateMap<Room, RoomPutDTO>();
+            CreateMap<RoomPutDTO, Room>();
+            CreateMap<Room, CreateRoomCommand>();
+            CreateMap<CreateRoomCommand, Room>();
+            CreateMap<Room, UpdateRoomCommand>();
+            CreateMap<UpdateRoomCommand, Room>();
+            CreateMap<Room, DeleteRoomCommand>();
+            CreateMap<DeleteRoomCommand, Room>();
+            CreateMap<Room, GetRoomByIdQuery>();
+            CreateMap<GetRoomByIdQuery, Room>();
+
         }
     }
 }

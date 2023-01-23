@@ -15,12 +15,16 @@ namespace Infrastructure.Repositories
 
         public async Task<Room> GetRoomByIdAsync(int id)
         {
-            return await _context.Rooms.FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.Rooms
+                .Include(r => r.RoomType)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task<List<Room>> GetAllRoomsAsync()
+        public async Task<IEnumerable<Room>> GetAllRoomsAsync()
         {
-            return await _context.Rooms.ToListAsync();
+            return await _context.Rooms
+                .Include(r => r.RoomType)
+                .ToListAsync();
         }
 
         public async Task AddRoomAsync(Room room)
@@ -37,9 +41,6 @@ namespace Infrastructure.Repositories
 
         public async Task DeleteRoomAsync(int id)
         {
-            //var room = await _context.Rooms.FindAsync(id);
-            //_context.Rooms.Remove(room);
-            //await _context.SaveChangesAsync();
             var room = await _context.Rooms.FirstOrDefaultAsync(r => r.Id == id);
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();

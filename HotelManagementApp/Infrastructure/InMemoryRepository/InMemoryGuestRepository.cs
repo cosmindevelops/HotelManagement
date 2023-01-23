@@ -6,7 +6,6 @@ namespace Infrastructure.InMemoryRepository
     public class InMemoryGuestRepository : IGuestRepository
     {
         private readonly List<Guest> _guestsList;
-        private readonly IEnumerable<Guest> guest;
 
         public InMemoryGuestRepository()
         {

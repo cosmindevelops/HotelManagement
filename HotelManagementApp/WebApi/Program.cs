@@ -1,6 +1,4 @@
 using Application.Common.Interfaces;
-using Application.Profiles;
-using AutoMapper;
 using Infrastructure;
 using Infrastructure.Repositories;
 using MediatR;
@@ -31,7 +29,6 @@ builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlSer
 
 builder.Services.AddMediatR(typeof(IAssemblyMarker));
 builder.Services.AddAutoMapper(typeof(IAssemblyMarker));
-
 
 //var mappingConfig = new MapperConfiguration(mc =>
 //{

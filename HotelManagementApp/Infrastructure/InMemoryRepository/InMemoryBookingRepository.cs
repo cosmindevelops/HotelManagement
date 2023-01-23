@@ -12,40 +12,40 @@ namespace Infrastructure.InMemoryRepository
             _bookings = new List<Booking>();
         }
 
-        public Task<Booking> GetBookingByIdAsync(int id)
+        public async Task<Booking> GetBookingByIdAsync(int id)
         {
-            return Task.FromResult(_bookings.SingleOrDefault(b => b.Id == id));
+            return await Task.FromResult(_bookings.SingleOrDefault(b => b.Id == id));
         }
 
-        public Task<List<Booking>> GetAllBookingsAsync()
+        public async Task<IEnumerable<Booking>> GetAllBookingsAsync()
         {
-            return Task.FromResult(_bookings);
+            return await Task.FromResult(_bookings);
         }
 
-        public Task AddBookingAsync(Booking booking)
+        public async Task AddBookingAsync(Booking booking)
         {
             _bookings.Add(booking);
-            return Task.CompletedTask;
+             await Task.CompletedTask;
         }
 
-        public Task UpdateBookingAsync(Booking booking)
+        public async Task UpdateBookingAsync(Booking booking)
         {
             var index = _bookings.FindIndex(b => b.Id == booking.Id);
             if (index != -1)
             {
                 _bookings[index] = booking;
             }
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
-        public Task DeleteBookingAsync(int id)
+        public async Task DeleteBookingAsync(int id)
         {
             var index = _bookings.FindIndex(b => b.Id == id);
             if (index != -1)
             {
                 _bookings.RemoveAt(index);
             }
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
     }
 }

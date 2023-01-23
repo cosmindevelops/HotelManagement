@@ -1,15 +1,16 @@
-﻿using Domain.Entities;
+﻿using Application.Bookings.DTO;
+using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Bookings.Commands.Delete
 {
-    public class DeleteBookingCommand : IRequest<Booking>
+    public class DeleteBookingCommand : IRequest<BookingGetDTO>
     {
         public int Id { get; set; }
+
+        public DeleteBookingCommand(int id)
+        {
+            Id = id;
+        }
     }
 }

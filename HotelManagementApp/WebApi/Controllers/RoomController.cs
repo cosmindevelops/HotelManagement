@@ -5,9 +5,7 @@ using Application.Rooms.Commands.Delete;
 using Application.Rooms.Commands.Update;
 using Application.Rooms.Queries.GetAllRooms;
 using Application.Rooms.Queries.GetRoomById;
-using Application.RoomTypes.Queries.GetRoomTypeById;
 using AutoMapper;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,73 +16,109 @@ namespace WebApi.Controllers
     public class RoomController : ControllerBase
     {
         private readonly IMediator _mediator;
-        //private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
 
-        public RoomController(IMediator mediator)
+        public RoomController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
-           // _mapper = mapper;
+            _mapper = mapper;
         }
-
+        //DONE
         [HttpGet]
         public async Task<IActionResult> GetAllRooms()
         {
-            var rooms = await _mediator.Send(new GetAllRoomsQuery());
-            return Ok(rooms);
+            try
+            {
+                var result = await _mediator.Send(new GetAllRoomsQuery());
+                return Ok(result);
+            }
+            catch (RoomNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
+        //DONE
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetRoomById(int id)
         {
-            var room = await _mediator.Send(new GetRoomByIdQuery { Id = id });
-
-            if (room == null)
+            try
             {
-                return NotFound();
+                var result = await _mediator.Send(new GetRoomByIdQuery(id));
+                return Ok(result);
             }
-            return Ok(room);
-
+            catch (RoomNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
+        //DONE
         [HttpPost]
         public async Task<IActionResult> CreateRoom([FromBody] CreateRoomCommand command)
         {
-            var room = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetRoomById), new { id = room.Id }, new RoomDTO
+            try
             {
-                Id = room.Id,
-                RoomNumber = room.RoomNumber,
-                RoomTypeId = room.RoomTypeId,
-            });
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (InvalidRoomException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
-
+        
+        //DONE
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> UpdateRoom(int id, [FromBody] UpdateRoomCommand command)
         {
-            command.Id = id;
-            var room = await _mediator.Send(command);
-            if (room == null)
+            try
             {
-                return NotFound();
+                command.Id = id;
+                var updatedRoom = await _mediator.Send(command);
+                return Ok(updatedRoom);
             }
-            return NoContent();
+            catch (ObjectNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
-
+        //DONE
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
-            var room = await _mediator.Send(new DeleteRoomCommand
+            try
             {
-                Id = id
-            });
-            if (room == null)
-            {
-                return NotFound();
+                var result = await _mediator.Send(new DeleteRoomCommand(id));
+                return Ok(result);
             }
-            return NoContent();
+            catch (ObjectNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

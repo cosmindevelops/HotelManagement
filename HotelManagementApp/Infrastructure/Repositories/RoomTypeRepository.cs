@@ -15,13 +15,11 @@ namespace Infrastructure.Repositories
 
         public async Task<RoomType> GetRoomTypeByIdAsync(int id)
         {
-            
             return await _context.RoomTypes.FirstOrDefaultAsync(rt => rt.Id == id);
         }
 
         public async Task<IEnumerable<RoomType>> GetAllRoomTypesAsync()
         {
-
             return await _context.RoomTypes.ToListAsync();
         }
 
@@ -39,9 +37,6 @@ namespace Infrastructure.Repositories
 
         public async Task DeleteRoomTypeAsync(int id)
         {
-            //var roomType = await _context.RoomTypes.FindAsync(id);
-            //_context.RoomTypes.Remove(roomType);
-            //await _context.SaveChangesAsync();
             var roomType = await _context.RoomTypes.FirstOrDefaultAsync(rt => rt.Id == id);
             _context.RoomTypes.Remove(roomType);
             await _context.SaveChangesAsync();

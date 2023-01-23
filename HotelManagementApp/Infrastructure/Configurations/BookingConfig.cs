@@ -10,17 +10,17 @@ namespace Infrastructure.Configurations
         {
             builder.ToTable("Bookings");
             builder.HasKey(b => b.Id);
-            
+
             builder.Property(x => x.StartDate)
                 .IsRequired();
-            
+
             builder.Property(x => x.EndDate)
                 .IsRequired();
-            
+
             builder.Property(x => x.CheckedIn)
                 .IsRequired()
                 .HasDefaultValue(false);
-            
+
             builder.Property(x => x.TotalCost)
                 .IsRequired()
                 .HasPrecision(9, 2);

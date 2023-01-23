@@ -11,6 +11,5 @@
             : base($"Guest with id {id} not found.")
         {
         }
-
     }
 }

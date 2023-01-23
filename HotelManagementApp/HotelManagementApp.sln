@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.XUnitTest", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.XUnitTest", "ApplicationXUnitTest\Application.XUnitTest.csproj", "{AAEEE2F9-4A8E-440F-B46E-947CA079354B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.MSTest", "WebApi.MSTest\WebApi.MSTest.csproj", "{417F7090-AE5B-42AB-9AB9-6224AA38C839}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2107CA34-30D4-4BB4-A076-AF156F72DC2B}"
 EndProject
 Global
@@ -49,10 +47,6 @@ Global
 		{AAEEE2F9-4A8E-440F-B46E-947CA079354B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAEEE2F9-4A8E-440F-B46E-947CA079354B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAEEE2F9-4A8E-440F-B46E-947CA079354B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{417F7090-AE5B-42AB-9AB9-6224AA38C839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{417F7090-AE5B-42AB-9AB9-6224AA38C839}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{417F7090-AE5B-42AB-9AB9-6224AA38C839}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{417F7090-AE5B-42AB-9AB9-6224AA38C839}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,7 +54,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{23025391-AF53-46EE-8FE3-A527AF17DDA9} = {2107CA34-30D4-4BB4-A076-AF156F72DC2B}
 		{AAEEE2F9-4A8E-440F-B46E-947CA079354B} = {2107CA34-30D4-4BB4-A076-AF156F72DC2B}
-		{417F7090-AE5B-42AB-9AB9-6224AA38C839} = {2107CA34-30D4-4BB4-A076-AF156F72DC2B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C598EA4F-C2AF-4E38-AB92-79E736FD82A6}
