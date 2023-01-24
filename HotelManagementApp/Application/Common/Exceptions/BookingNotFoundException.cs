@@ -3,18 +3,14 @@
     public class BookingNotFoundException : Exception
     {
         public BookingNotFoundException()
-        : base()
+        : base("Booking not found.")
         {
         }
 
-        public BookingNotFoundException(string message)
-            : base(message)
+        public BookingNotFoundException(int id)
+            : base($"Booking with id {id} not found.")
         {
         }
 
-        public BookingNotFoundException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
     }
 }

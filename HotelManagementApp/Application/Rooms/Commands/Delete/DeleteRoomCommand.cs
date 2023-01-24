@@ -1,15 +1,15 @@
-﻿using Domain.Entities;
+﻿using Application.Rooms.DTO;
+using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Rooms.Commands.Delete
 {
-    public class DeleteRoomCommand : IRequest<Room>
+    public class DeleteRoomCommand : IRequest<RoomGetDTO>
     {
         public int Id { get; set; }
+        public DeleteRoomCommand(int id)
+        {
+            Id = id;
+        }
     }
 }

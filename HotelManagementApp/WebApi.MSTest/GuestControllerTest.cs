@@ -1,6 +1,6 @@
-﻿using Application.DTO;
-using Application.Guests.Commands.Create;
-using Application.Guests.Commands.Delete;
+﻿using Application.Guests.Commands.Delete;
+using Application.Guests.Commands.Update;
+using Application.Guests.DTO;
 using Application.Guests.Queries.GetAllGuests;
 using Application.Guests.Queries.GetGuestById;
 using Domain.Entities;
@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApi.Controllers;
 
-namespace WebApi.MSTest
+namespace WebAPI.MSTest
 {
     [TestClass]
     public class GuestControllerTest
@@ -59,7 +59,7 @@ namespace WebApi.MSTest
         {
             // Arrange
             int guestId = 1;
-            var expectedGuest = new Guest
+            var expectedGuest = new GuestGetDTO
             {
                 Id = guestId,
                 FirstName = "Mike",
@@ -83,7 +83,7 @@ namespace WebApi.MSTest
         {
             // Arrange
             int guestId = 1;
-            var expectedGuest = new Guest
+            var expectedGuest = new GuestGetDTO
             {
                 Id = guestId,
                 FirstName = "Mike",
@@ -118,6 +118,7 @@ namespace WebApi.MSTest
             // Assert
             _mockMediator.Verify(x => x.Send(It.Is<DeleteGuestCommand>(q => q.Id == guestId), It.IsAny<CancellationToken>()), Times.Once());
         }
+        
 
     }
 }

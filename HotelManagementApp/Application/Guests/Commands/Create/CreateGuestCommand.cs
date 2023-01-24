@@ -1,16 +1,15 @@
-﻿using Domain.Entities;
+﻿using Application.Guests.DTO;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Guests.Commands.Create
 {
-    public class CreateGuestCommand : IRequest<Guest>
+    public class CreateGuestCommand : IRequest<GuestPostDTO>
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public GuestPostDTO Guest { get; set; }
+
+        public CreateGuestCommand(GuestPostDTO guest)
+        {
+            Guest = guest;
+        }
     }
 }

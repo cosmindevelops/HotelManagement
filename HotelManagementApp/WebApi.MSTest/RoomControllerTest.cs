@@ -1,10 +1,7 @@
 ﻿using Application.Rooms.Commands.Delete;
-using Application.Rooms.Commands.Update;
 using Application.Rooms.Queries.GetAllRooms;
 using Application.Rooms.Queries.GetRoomById;
-using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -13,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApi.Controllers;
 
-namespace WebApi.MSTest
+namespace WebAPI.MSTest
 {
     [TestClass]
     public class RoomControllerTest

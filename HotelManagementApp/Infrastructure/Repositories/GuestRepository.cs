@@ -18,7 +18,7 @@ namespace Infrastructure.Repositories
             return await _context.Guests.FindAsync(id);
         }
 
-        public async Task<List<Guest>> GetAllGuestsAsync()
+        public async Task<IEnumerable<Guest>> GetAllGuestsAsync()
         {
             return await _context.Guests.ToListAsync();
         }
@@ -41,5 +41,13 @@ namespace Infrastructure.Repositories
             _context.Guests.Remove(guest);
             await _context.SaveChangesAsync();
         }
+        public async Task<Guest> GetGuestByFullName(string firstName, string lastName)
+        {
+            return await _context.Guests
+                .Include(b => b.Bookings)
+                .FirstOrDefaultAsync(g => g.FirstName == firstName && g.LastName == lastName);
+        }
+        
+
     }
 }

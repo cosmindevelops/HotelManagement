@@ -55,8 +55,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("GuestId");
 
-                    b.HasIndex("RoomId")
-                        .IsUnique();
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Bookings", (string)null);
 
@@ -317,8 +316,8 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Room", "Room")
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.Booking", "RoomId")
+                        .WithMany("Bookings")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -339,6 +338,11 @@ namespace Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("Domain.Entities.Guest", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Room", b =>
                 {
                     b.Navigation("Bookings");
                 });

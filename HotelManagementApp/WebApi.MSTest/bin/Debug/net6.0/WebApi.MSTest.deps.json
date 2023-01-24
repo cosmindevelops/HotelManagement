@@ -6,11 +6,10 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "WebApi.MSTest/1.0.0": {
+      "WebAPI.MSTest/1.0.0": {
         "dependencies": {
           "MSTest.TestAdapter": "2.2.10",
           "MSTest.TestFramework": "2.2.10",
-          "MediatR": "11.1.0",
           "Microsoft.NET.Test.Sdk": "17.3.2",
           "Moq": "4.18.4",
           "WebApi": "1.0.0",
@@ -18,7 +17,7 @@
           "Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions": "14.0.0.0"
         },
         "runtime": {
-          "WebApi.MSTest.dll": {}
+          "WebAPI.MSTest.dll": {}
         }
       },
       "AutoMapper/12.0.0": {
@@ -1774,7 +1773,7 @@
     }
   },
   "libraries": {
-    "WebApi.MSTest/1.0.0": {
+    "WebAPI.MSTest/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -12,7 +12,8 @@ namespace WebApi.Middleware
             _next = next;
             _logger = logger;
         }
-        public async Task InvokeAsync(HttpContext context) 
+
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
@@ -21,7 +22,7 @@ namespace WebApi.Middleware
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                
+
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
         }

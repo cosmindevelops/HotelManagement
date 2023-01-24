@@ -1,10 +1,9 @@
-﻿using Application.DTO;
+﻿using Application.Common.Exceptions;
 using Application.RoomTypes.Commands.Create;
 using Application.RoomTypes.Commands.Delete;
 using Application.RoomTypes.Commands.Update;
 using Application.RoomTypes.Queries.GetAllRoomTypes;
 using Application.RoomTypes.Queries.GetRoomTypeById;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,67 +20,103 @@ namespace WebApi.Controllers
             _mediator = mediator;
         }
 
+        //DONE
         [HttpGet]
         public async Task<IActionResult> GetAllRoomTypes()
         {
-            var roomTypes = await _mediator.Send(new GetAllRoomTypesQuery());
-            return Ok(roomTypes);
+            try
+            {
+                var result = await _mediator.Send(new GetAllRoomTypesQuery());
+                return Ok(result);
+            }
+            catch (RoomTypeNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
+        //DONE
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetRoomTypeById(int id)
         {
-            var roomType = await _mediator.Send(new GetRoomTypeByIdQuery
+            try
             {
-                Id = id
-            });
-            if (roomType == null)
-            {
-                return NotFound();
+                var result = await _mediator.Send(new GetRoomTypeByIdQuery(id));
+                return Ok(result);
             }
-            return Ok(roomType);
+            catch (RoomTypeNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
+        //Done
         [HttpPost]
         public async Task<IActionResult> CreateRoomType([FromBody] CreateRoomTypeCommand command)
         {
-            var roomType = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetRoomTypeById), new { id = roomType.Id }, new RoomTypeDTO
+            try
             {
-                Id = roomType.Id,
-                Title = roomType.Title,
-                Description = roomType.Description,
-                Price = roomType.Price
-            });
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (InvalidRoomTypeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
+        //DONE
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> UpdateRoomType(int id, [FromBody] UpdateRoomTypeCommand command)
         {
-            command.Id = id;
-            var roomType = await _mediator.Send(command);
-            if (roomType == null)
+            try
             {
-                return NotFound();
+                command.Id = id;
+                var roomType = await _mediator.Send(command);
+                return Ok(roomType);
             }
-            return NoContent();
+            catch (ObjectNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
+        //DONE
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteRoomType(int id)
         {
-            var roomType = await _mediator.Send(new DeleteRoomTypeCommand
+            try
             {
-                Id = id
-            });
-            if (roomType == null)
-            {
-                return NotFound();
+                var roomType = await _mediator.Send(new DeleteRoomTypeCommand(id));
+                return Ok(roomType);
             }
-            return NoContent();
+            catch (ObjectNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

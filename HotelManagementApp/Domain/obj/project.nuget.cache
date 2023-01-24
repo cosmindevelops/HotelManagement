@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "rMnQCRwXgfvniogOcuVf5yxs30DsQrrU2PVD8gLLWpzZzyj78FRod2PtJrS2QPXFqmiIYDJmaHoDMyx34yTbSg==",
+  "dgSpecHash": "3BUjjISomfQWuNOwJh/3HKqr+FJrPO8h2TMboZpwjun3xKtUxJQequur95oH/5GKH7bscpYKBUC3xK82kGu4KA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Andrew\\Documents\\GitHub\\Amdaris\\Projects\\HotelManagementApp\\Domain\\Domain.csproj",
+  "projectFilePath": "C:\\Users\\Andrew\\Desktop\\Amdaris\\EF Core\\HotelManagementApp\\Domain\\Domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

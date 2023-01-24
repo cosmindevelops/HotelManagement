@@ -6,7 +6,7 @@ namespace Application.Common.Interfaces
     {
         Task<Booking> GetBookingByIdAsync(int id);
 
-        Task<List<Booking>> GetAllBookingsAsync();
+        Task<IEnumerable<Booking>> GetAllBookingsAsync();
 
         Task AddBookingAsync(Booking booking);
 

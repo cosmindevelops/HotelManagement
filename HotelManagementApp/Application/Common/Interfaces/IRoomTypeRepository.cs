@@ -6,7 +6,7 @@ namespace Application.Common.Interfaces
     {
         Task<RoomType> GetRoomTypeByIdAsync(int id);
 
-        Task<List<RoomType>> GetAllRoomTypesAsync();
+        Task<IEnumerable<RoomType>> GetAllRoomTypesAsync();
 
         Task AddRoomTypeAsync(RoomType roomType);
 

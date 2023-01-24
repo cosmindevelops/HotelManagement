@@ -1,35 +1,35 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Guests.DTO;
+using AutoMapper;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Guests.Commands.Delete
 {
-    public class DeleteGuestCommandHandler : IRequestHandler<DeleteGuestCommand, Guest>
+    public class DeleteGuestCommandHandler : IRequestHandler<DeleteGuestCommand, GuestGetDTO>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public DeleteGuestCommandHandler(IUnitOfWork unitOfWork)
+        public DeleteGuestCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<Guest> Handle(DeleteGuestCommand request, CancellationToken cancellationToken)
+        public async Task<GuestGetDTO> Handle(DeleteGuestCommand request, CancellationToken cancellationToken)
         {
             var guest = await _unitOfWork.GuestRepository.GetGuestByIdAsync(request.Id);
             if (guest == null)
             {
-                throw new ObjectNotFoundException();
+                throw new ObjectNotFoundException(nameof(Guest), request.Id);
             }
 
-            await _unitOfWork.GuestRepository.DeleteGuestAsync(request.Id);
+            await _unitOfWork.GuestRepository.DeleteGuestAsync(guest.Id);
             await _unitOfWork.SaveAsync();
-            return guest;
+
+            return _mapper.Map<GuestGetDTO>(guest);
         }
     }
 }

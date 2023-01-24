@@ -5,47 +5,52 @@ namespace Infrastructure.InMemoryRepository
 {
     public class InMemoryGuestRepository : IGuestRepository
     {
-        private readonly List<Guest> _guests;
+        private readonly List<Guest> _guestsList;
 
         public InMemoryGuestRepository()
         {
-            _guests = new List<Guest>();
+            _guestsList = new List<Guest>();
         }
 
         public async Task<Guest> GetGuestByIdAsync(int id)
         {
-            return await Task.FromResult(_guests.SingleOrDefault(g => g.Id == id));
+            return await Task.FromResult(_guestsList.SingleOrDefault(g => g.Id == id));
         }
 
-        public async Task<List<Guest>> GetAllGuestsAsync()
+        public async Task<IEnumerable<Guest>> GetAllGuestsAsync()
         {
-            return await Task.FromResult(_guests);
+            return await Task.FromResult(_guestsList.AsEnumerable());
         }
 
         public async Task AddGuestAsync(Guest guest)
         {
-            _guests.Add(guest);
+            _guestsList.Add(guest);
             await Task.CompletedTask;
         }
 
         public async Task UpdateGuestAsync(Guest guest)
         {
-            var index = _guests.FindIndex(g => g.Id == guest.Id);
+            var index = _guestsList.FindIndex(g => g.Id == guest.Id);
             if (index > -1)
             {
-                _guests[index] = guest;
+                _guestsList[index] = guest;
             }
             await Task.CompletedTask;
         }
 
         public async Task DeleteGuestAsync(int id)
         {
-            var guest = _guests.SingleOrDefault(g => g.Id == id);
+            var guest = _guestsList.SingleOrDefault(g => g.Id == id);
             if (guest != null)
             {
-                _guests.Remove(guest);
+                _guestsList.Remove(guest);
             }
             await Task.CompletedTask;
+        }
+
+        public Task<Guest> GetGuestByFullName(string firstName, string lastName)
+        {
+            throw new NotImplementedException();
         }
     }
 }

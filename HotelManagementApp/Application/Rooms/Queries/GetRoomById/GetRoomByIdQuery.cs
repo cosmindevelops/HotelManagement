@@ -1,15 +1,16 @@
-﻿using Domain.Entities;
+﻿using Application.Rooms.DTO;
+using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Rooms.Queries.GetRoomById
 {
-    public class GetRoomByIdQuery : IRequest<Room>
+    public class GetRoomByIdQuery : IRequest<RoomGetDTO>
     {
         public int Id { get; set; }
+
+        public GetRoomByIdQuery(int id)
+        {
+            Id = id;
+        }
     }
 }

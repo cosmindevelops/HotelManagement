@@ -1,4 +1,5 @@
 ﻿using Application.Bookings.Commands.Delete;
+using Application.Bookings.DTO;
 using Application.Bookings.Queries.GetAllBookingsQuery;
 using Application.Bookings.Queries.GetBookingById;
 using Domain.Entities;
@@ -12,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApi.Controllers;
 
-namespace WebApi.MSTest
+namespace WebAPI.MSTest
 {
     [TestClass]
     public class BookingControllerTest
@@ -57,7 +58,7 @@ namespace WebApi.MSTest
         {
             // Arrange
             int bookingId = 1;
-            var expectedBooking = new Booking
+            var expectedBooking = new BookingGetDTO
             {
                 Id = bookingId,
                 GuestId = 1,

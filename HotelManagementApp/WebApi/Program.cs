@@ -28,20 +28,11 @@ builder.Services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
 builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer("name=DefaultConnection"));
 
 builder.Services.AddMediatR(typeof(IAssemblyMarker));
-// var mappingConfig = new MapperConfiguration(mc =>
-// {
-//     mc.AddProfile(new BookingProfile());
-//     mc.AddProfile(new GuestProfile());
-//     mc.AddProfile(new RoomProfile());
-//     mc.AddProfile(new RoomTypeProfile());
-// });
-//
-// IMapper mapper = mappingConfig.CreateMapper();
-// services.AddSingleton(mapper);
+builder.Services.AddAutoMapper(typeof(IAssemblyMarker));
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -49,6 +40,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseAuthorization();
 

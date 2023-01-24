@@ -3,17 +3,12 @@
     public class RoomNotFoundException : Exception
     {
         public RoomNotFoundException()
-        : base()
+        : base("Room not found.")
         {
         }
 
-        public RoomNotFoundException(string message)
-            : base(message)
-        {
-        }
-
-        public RoomNotFoundException(string message, Exception innerException)
-            : base(message, innerException)
+        public RoomNotFoundException(int id)
+            : base($"Room with id {id} not found.")
         {
         }
     }

@@ -17,7 +17,7 @@ namespace Infrastructure.InMemoryRepository
             return await Task.FromResult(_rooms.SingleOrDefault(r => r.Id == id));
         }
 
-        public async Task<List<Room>> GetAllRoomsAsync()
+        public async Task<IEnumerable<Room>> GetAllRoomsAsync()
         {
             return await Task.FromResult(_rooms);
         }

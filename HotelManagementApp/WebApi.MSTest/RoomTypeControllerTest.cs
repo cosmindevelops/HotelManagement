@@ -1,17 +1,15 @@
 ﻿using Application.RoomTypes.Queries.GetAllRoomTypes;
 using Application.RoomTypes.Queries.GetRoomTypeById;
-using Domain.Entities;
 using MediatR;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApi.Controllers;
 
-namespace WebApi.MSTest
+namespace WebAPI.MSTest
 {
     [TestClass]
     public class RoomTypeControllerTest
@@ -26,7 +24,7 @@ namespace WebApi.MSTest
             .Setup(m => m.Send(It.IsAny<GetAllRoomTypesQuery>(), It.IsAny<CancellationToken>()))
             .Verifiable();
 
-           
+
             // Act
             var controller = new RoomTypeController(_mockMediator.Object);
             await controller.GetAllRoomTypes();

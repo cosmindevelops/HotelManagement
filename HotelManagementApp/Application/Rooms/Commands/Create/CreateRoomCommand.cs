@@ -1,17 +1,15 @@
-﻿using Application.DTO;
-using Domain.Entities;
+﻿using Application.Rooms.DTO;
+using Application.RoomTypes.DTO;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Rooms.Commands.Create
 {
-    public class CreateRoomCommand : IRequest<Room>
+    public class CreateRoomCommand : IRequest<RoomPostDTO>
     {
-        public int RoomNumber { get; set; }
-        public int RoomTypeId { get; set; }
+        public RoomPostDTO Room { get; set; }
+        public CreateRoomCommand(RoomPostDTO room)
+        {
+            Room = room;
+        }
     }
 }

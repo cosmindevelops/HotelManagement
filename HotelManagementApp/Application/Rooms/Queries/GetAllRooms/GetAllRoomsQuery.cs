@@ -1,14 +1,10 @@
-﻿using Domain.Entities;
+﻿using Application.Rooms.DTO;
+using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Rooms.Queries.GetAllRooms
 {
-    public class GetAllRoomsQuery : IRequest<IEnumerable<Room>>
+    public class GetAllRoomsQuery : IRequest<IEnumerable<RoomGetDTO>>
     {
     }
 }

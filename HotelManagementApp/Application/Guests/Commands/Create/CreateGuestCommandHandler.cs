@@ -1,36 +1,41 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
+using Application.Guests.DTO;
+using AutoMapper;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Guests.Commands.Create
 {
-    public class CreateGuestCommandHandler : IRequestHandler<CreateGuestCommand, Guest>
+    public class CreateGuestCommandHandler : IRequestHandler<CreateGuestCommand, GuestPostDTO>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public CreateGuestCommandHandler(IUnitOfWork unitOfWork/*, IMapper mapper*/)
+        public CreateGuestCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<Guest> Handle(CreateGuestCommand request, CancellationToken cancellationToken)
+        public async Task<GuestPostDTO> Handle(CreateGuestCommand request, CancellationToken cancellationToken)
         {
-            // Guest guest = _mapper.Map<Guest>(request);
-            var guest = new Guest
+            if (string.IsNullOrEmpty(request.Guest.FirstName) || string.IsNullOrEmpty(request.Guest.LastName))
             {
-                FirstName = request.FirstName,
-                LastName = request.LastName
-            };
-            
+                throw new InvalidGuestException();
+            }
+            var guest = _mapper.Map<Guest>(request.Guest);
+
+            // Check if guest already exists in the database
+            var existingGuest = await _unitOfWork.GuestRepository.GetGuestByFullName(guest.FirstName, guest.LastName);
+            if (existingGuest != null)
+            {
+                throw new GuestAlreadyExistsException();
+            }
+
             await _unitOfWork.GuestRepository.AddGuestAsync(guest);
             await _unitOfWork.SaveAsync();
-            return guest;
+            return _mapper.Map<GuestPostDTO>(guest);
         }
     }
-
 }
