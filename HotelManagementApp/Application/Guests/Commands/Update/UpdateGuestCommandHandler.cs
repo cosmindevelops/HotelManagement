@@ -1,37 +1,36 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Application.Guests.DTO;
-using AutoMapper;
 using Domain.Entities;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Guests.Commands.Update
 {
-    public class UpdateGuestCommandHandler : IRequestHandler<UpdateGuestCommand, GuestPutDTO>
+    public class UpdateGuestCommandHandler : IRequestHandler<UpdateGuestCommand, Guest>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public UpdateGuestCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateGuestCommandHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
-        public async Task<GuestPutDTO> Handle(UpdateGuestCommand request, CancellationToken cancellationToken)
+        public async Task<Guest> Handle(UpdateGuestCommand request, CancellationToken cancellationToken)
         {
             var guest = await _unitOfWork.GuestRepository.GetGuestByIdAsync(request.Id);
             if (guest == null)
             {
-                throw new ObjectNotFoundException(nameof(Guest), request.Id);
+                throw new ObjectNotFoundException();
             }
 
-            _mapper.Map(request, guest);
-
-            await _unitOfWork.GuestRepository.UpdateGuestAsync(guest);
+            guest.FirstName = request.FirstName;
+            guest.LastName = request.LastName;
             await _unitOfWork.SaveAsync();
-
-            return _mapper.Map<GuestPutDTO>(guest);
+            return guest;
         }
     }
 }

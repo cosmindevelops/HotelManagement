@@ -1,37 +1,40 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Application.RoomTypes.DTO;
-using AutoMapper;
 using Domain.Entities;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.RoomTypes.Commands.Update
 {
-    public class UpdateRoomTypeCommandHandler : IRequestHandler<UpdateRoomTypeCommand, RoomTypePutDTO>
+    public class UpdateRoomTypeCommandHandler : IRequestHandler<UpdateRoomTypeCommand, RoomType>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public UpdateRoomTypeCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateRoomTypeCommandHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
-        public async Task<RoomTypePutDTO> Handle(UpdateRoomTypeCommand request, CancellationToken cancellationToken)
+        public async Task<RoomType> Handle(UpdateRoomTypeCommand request, CancellationToken cancellationToken)
         {
-            var roomType = await _unitOfWork.RoomTypeRepository.GetRoomTypeByIdAsync(request.Id);
-
+            RoomType roomType = await _unitOfWork.RoomTypeRepository.GetRoomTypeByIdAsync(request.Id);
             if (roomType == null)
             {
-                throw new ObjectNotFoundException(nameof(RoomType), request.Id);
+                throw new RoomTypeNotFoundException($"Room type with id {request.Id} not found.");
             }
 
-            _mapper.Map(request, roomType);
+            roomType.Title = request.Title;
+            roomType.Description = request.Description;
+            roomType.Price = request.Price;
+
             await _unitOfWork.RoomTypeRepository.UpdateRoomTypeAsync(roomType);
             await _unitOfWork.SaveAsync();
 
-            return _mapper.Map<RoomTypePutDTO>(roomType);
+            return roomType;
         }
     }
 }

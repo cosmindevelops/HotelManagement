@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zONGytqJx6344P18CRa0Xi03A5CqHnnRKtExKX4O8ULptHt5bM1iWr1Js2srcw+88ifGztNYmARwuCfitjqgkQ==",
+  "dgSpecHash": "PRDv/UL54ONo+4NCG+bO5LnTwW93arq0muQgWMVBRe5ZLj7EJ/kzpWxe0zT8UptajN3IjDUCcOwTU637B2JbMg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Andrew\\Desktop\\Amdaris\\EF Core\\HotelManagementApp\\WebApi\\WebApi.csproj",
+  "projectFilePath": "C:\\Users\\Andrew\\Documents\\GitHub\\Amdaris\\Projects\\HotelManagementApp\\WebApi\\WebApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Andrew\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
     "C:\\Users\\Andrew\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",

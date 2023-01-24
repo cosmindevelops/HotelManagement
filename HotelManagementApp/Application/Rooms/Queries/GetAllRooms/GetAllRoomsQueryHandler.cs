@@ -1,31 +1,26 @@
-﻿using Application.Common.Exceptions;
-using Application.Common.Interfaces;
-using Application.Rooms.DTO;
-using AutoMapper;
+﻿using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Rooms.Queries.GetAllRooms
 {
-    public class GetAllRoomsQueryHandler : IRequestHandler<GetAllRoomsQuery, IEnumerable<RoomGetDTO>>
+    public class GetAllRoomsQueryHandler : IRequestHandler<GetAllRoomsQuery, IEnumerable<Room>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public GetAllRoomsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetAllRoomsQueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<RoomGetDTO>> Handle(GetAllRoomsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Room>> Handle(GetAllRoomsQuery request, CancellationToken cancellationToken)
         {
-            var rooms = await _unitOfWork.RoomRepository.GetAllRoomsAsync();
-            if (rooms == null)
-            {
-                throw new RoomNotFoundException();
-            }
-            return _mapper.Map<IEnumerable<RoomGetDTO>>(rooms);
+            return await _unitOfWork.RoomRepository.GetAllRoomsAsync();
         }
     }
 }

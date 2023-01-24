@@ -15,18 +15,12 @@ namespace Infrastructure.Repositories
 
         public async Task<Booking> GetBookingByIdAsync(int id)
         {
-            return await _context.Bookings
-                    .Include(b => b.Guest)
-                    .Include(b => b.Room)
-                    .FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.Bookings.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Booking>> GetAllBookingsAsync()
+        public async Task<List<Booking>> GetAllBookingsAsync()
         {
-            return await _context.Bookings
-                    .Include(b => b.Guest)
-                    .Include(b => b.Room)
-                    .ToListAsync();
+            return await _context.Bookings.ToListAsync();
         }
 
         public async Task AddBookingAsync(Booking booking)

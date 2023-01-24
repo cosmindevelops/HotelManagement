@@ -2,11 +2,18 @@
 {
     public class RoomTypeNotFoundException : Exception
     {
-        public RoomTypeNotFoundException() : base("RoomType not found.")
+        public RoomTypeNotFoundException()
+        : base()
         {
         }
 
-        public RoomTypeNotFoundException(int id) : base($"RoomType with id {id} not found.")
+        public RoomTypeNotFoundException(string message)
+            : base(message)
+        {
+        }
+
+        public RoomTypeNotFoundException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }

@@ -10,11 +10,11 @@ namespace Infrastructure.Configurations
         {
             builder.ToTable("Guests");
             builder.HasKey(g => g.Id);
-
+            
             builder.Property(x => x.FirstName)
                 .HasMaxLength(50)
                 .IsRequired();
-
+            
             builder.Property(x => x.LastName)
                 .HasMaxLength(50)
                 .IsRequired();

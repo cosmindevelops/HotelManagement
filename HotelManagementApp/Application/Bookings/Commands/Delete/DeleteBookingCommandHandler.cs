@@ -1,36 +1,34 @@
-﻿using Application.Bookings.DTO;
-using Application.Common.Exceptions;
+﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using AutoMapper;
 using Domain.Entities;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Bookings.Commands.Delete
 {
-    public class DeleteBookingCommandHandler : IRequestHandler<DeleteBookingCommand, BookingGetDTO>
+    public class DeleteBookingCommandHandler : IRequestHandler<DeleteBookingCommand, Booking>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public DeleteBookingCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public DeleteBookingCommandHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
-        public async Task<BookingGetDTO> Handle(DeleteBookingCommand request, CancellationToken cancellationToken)
+        public async Task<Booking> Handle(DeleteBookingCommand request, CancellationToken cancellationToken)
         {
             var booking = await _unitOfWork.BookingRepository.GetBookingByIdAsync(request.Id);
             if (booking == null)
             {
-                throw new ObjectNotFoundException(nameof(Booking), request.Id);
+                throw new ObjectNotFoundException($"Booking with ID '{request.Id}' not found.");
             }
-                
-
-            await _unitOfWork.BookingRepository.DeleteBookingAsync(booking.Id);
+            await _unitOfWork.BookingRepository.DeleteBookingAsync(request.Id);
             await _unitOfWork.SaveAsync();
-
-            return _mapper.Map<BookingGetDTO>(booking);
+            return booking;
         }
     }
 }

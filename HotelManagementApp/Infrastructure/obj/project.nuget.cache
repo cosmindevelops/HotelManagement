@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Sz3Jqh9OspbD/mrIO79DC9eiiyYE0BOug7r7RJ38zOREDoFPkIkY1GKbPUDiZU7QybmJLiDYMkABB4i750gl+A==",
+  "dgSpecHash": "ykFJEzZu5iG/Xb1c8CQqe57jWgRNa6uiTWuthZB3O1mdmbJhhf0bz5eRqPyVPywklmcmfAMC1YctZwxAwe71+g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Andrew\\Desktop\\Amdaris\\EF Core\\HotelManagementApp\\Infrastructure\\Infrastructure.csproj",
+  "projectFilePath": "C:\\Users\\Andrew\\Documents\\GitHub\\Amdaris\\Projects\\HotelManagementApp\\Infrastructure\\Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Andrew\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
     "C:\\Users\\Andrew\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",

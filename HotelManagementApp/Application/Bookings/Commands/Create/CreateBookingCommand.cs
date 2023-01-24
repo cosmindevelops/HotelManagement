@@ -1,20 +1,20 @@
-﻿using Application.Bookings.DTO;
-using Application.Rooms.DTO;
-using Domain.Entities;
+﻿using Domain.Entities;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Bookings.Commands.Create
 {
-    public class CreateBookingCommand : IRequest<BookingPostDTO>
+    public class CreateBookingCommand : IRequest<Booking>
     {
-        public BookingPostDTO Booking { get; set; }
-        public CreateBookingCommand(BookingPostDTO booking)
-        {
-            Booking = booking;
-            Booking.CheckedIn = false;
-        }
+        public Room RoomId { get; set; }
+        public Guest GuestId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public bool CheckedIn { get; set; }
+        public decimal TotalCost { get; set; }
     }
-
-
-    
 }

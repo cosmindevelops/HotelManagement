@@ -1,38 +1,42 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Application.Rooms.DTO;
-using AutoMapper;
 using Domain.Entities;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Rooms.Commands.Create
 {
-    public class CreateRoomCommandHandler : IRequestHandler<CreateRoomCommand, RoomPostDTO>
+    public class CreateRoomCommandHandler : IRequestHandler<CreateRoomCommand, Room>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public CreateRoomCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public CreateRoomCommandHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
-        public async Task<RoomPostDTO> Handle(CreateRoomCommand request, CancellationToken cancellationToken)
+        public async Task<Room> Handle(CreateRoomCommand request, CancellationToken cancellationToken)
         {
-            
-
-            if (request.Room.RoomNumber <= 0 || request.Room.RoomTypeId<=0)
+            var roomType = await _unitOfWork.RoomTypeRepository.GetRoomTypeByIdAsync(request.RoomTypeId);
+            if (roomType == null)
             {
-                throw new InvalidRoomException();
+                throw new RoomTypeNotFoundException($"RoomType with id {request.RoomTypeId} not found.");
             }
-            
-            var room = _mapper.Map<Room>(request.Room);
+
+            Room room = new Room
+            {
+                RoomNumber = request.RoomNumber,
+                RoomType = roomType
+            };
 
             await _unitOfWork.RoomRepository.AddRoomAsync(room);
             await _unitOfWork.SaveAsync();
 
-            return _mapper.Map<RoomPostDTO>(room);
+            return room;
         }
     }
 }

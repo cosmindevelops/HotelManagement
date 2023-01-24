@@ -28,21 +28,20 @@ builder.Services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
 builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer("name=DefaultConnection"));
 
 builder.Services.AddMediatR(typeof(IAssemblyMarker));
-builder.Services.AddAutoMapper(typeof(IAssemblyMarker));
-
-//var mappingConfig = new MapperConfiguration(mc =>
-//{
-//   // mc.AddProfile(new BookingProfile());
-//   // mc.AddProfile(new GuestProfile());
-//    mc.AddProfile<RoomProfile>();
-//   // mc.AddProfile(new RoomTypeProfile());
-//});
-
-//IMapper mapper = mappingConfig.CreateMapper();
-//services.AddSingleton(mapper);
+// var mappingConfig = new MapperConfiguration(mc =>
+// {
+//     mc.AddProfile(new BookingProfile());
+//     mc.AddProfile(new GuestProfile());
+//     mc.AddProfile(new RoomProfile());
+//     mc.AddProfile(new RoomTypeProfile());
+// });
+//
+// IMapper mapper = mappingConfig.CreateMapper();
+// services.AddSingleton(mapper);
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

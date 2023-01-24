@@ -1,11 +1,11 @@
-﻿using Application.Common.Exceptions;
+﻿using Application.DTO;
 using Application.Guests.Commands.Create;
 using Application.Guests.Commands.Delete;
 using Application.Guests.Commands.Update;
-using Application.Guests.DTO;
+using Application.Guests.Queries;
 using Application.Guests.Queries.GetAllGuests;
 using Application.Guests.Queries.GetGuestById;
-using AutoMapper;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,115 +16,72 @@ namespace WebApi.Controllers
     public class GuestController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public GuestController(IMediator mediator, IMapper mapper)
+        public GuestController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
 
-        //DONE
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetGuestById(int id)
         {
-            try
+            var guest = await _mediator.Send(new GetGuestByIdQuery { Id = id });
+            if (guest == null)
             {
-                var query = new GetGuestByIdQuery(id);
-                var guest = await _mediator.Send(query);
-                return Ok(guest);
+                return NotFound();
             }
-            catch (GuestNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+
+            return Ok(guest);
         }
 
-        //DONE
         [HttpGet]
         public async Task<IActionResult> GetAllGuests()
         {
-            try
-            {
-                var query = new GetAllGuestsQuery();
-                var guests = await _mediator.Send(query);
-                return Ok(guests);
-            }
-            catch (GuestNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var guests = await _mediator.Send(new GetAllGuestsQuery());
+            return Ok(guests);
         }
 
-        //DONE
+        
         [HttpPost]
-        public async Task<IActionResult> CreateGuest([FromBody] GuestPostDTO guestDto)
+        public async Task<IActionResult> CreateGuest([FromBody] CreateGuestCommand command)
         {
-            try
+            var guest = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetGuestById), new { id = guest.Id }, new GuestDTO
             {
-                var command = new CreateGuestCommand(guestDto);
-                var result = await _mediator.Send(command);
-                return Ok(result);
-            }
-            catch (InvalidGuestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+                Id = guest.Id,
+                FirstName = guest.FirstName,
+                LastName = guest.LastName
+            });
         }
 
-        //DONE
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> UpdateGuest(int id, [FromBody] UpdateGuestCommand command)
         {
-            try
+            command.Id = id;
+            var guest = await _mediator.Send(command);
+
+            if (guest == null)
             {
-                command.Id = id;
-                var result = await _mediator.Send(command);
-                return Ok(result);
+                return NotFound();
             }
-            catch (ObjectNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            return NoContent();
         }
 
-        //DONE
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteGuest(int id)
         {
-            try
+            var guest = await _mediator.Send(new DeleteGuestCommand { Id = id });
+            //return Ok(guest);
+            if (guest == null)
             {
-                var command = new DeleteGuestCommand(id);
-                var result = await _mediator.Send(command);
-                return Ok(result);
+                return NotFound();
             }
-            catch (ObjectNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            return NoContent();
         }
+
+
     }
 }

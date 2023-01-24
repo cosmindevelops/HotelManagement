@@ -1,31 +1,24 @@
-﻿using Application.Bookings.DTO;
-using Application.Common.Exceptions;
-using Application.Common.Interfaces;
-using AutoMapper;
+﻿using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Bookings.Queries.GetAllBookingsQuery
 {
-    public class GetAllBookingsQueryHandler : IRequestHandler<GetAllBookingsQuery, IEnumerable<BookingGetDTO>>
+    public class GetAllBookingsQueryHandler : IRequestHandler<GetAllBookingsQuery, IEnumerable<Booking>>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public GetAllBookingsQueryHandler(IUnitOfWork context, IMapper mapper)
+        private readonly IUnitOfWork _context;
+        public GetAllBookingsQueryHandler(IUnitOfWork context)
         {
-            _unitOfWork = context;
-            _mapper = mapper;
+            _context = context;
         }
-
-        public async Task<IEnumerable<BookingGetDTO>> Handle(GetAllBookingsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Booking>> Handle(GetAllBookingsQuery request, CancellationToken cancellationToken)
         {
-            var bookings = await _unitOfWork.BookingRepository.GetAllBookingsAsync();
-            if (bookings == null)
-            {
-                throw new BookingNotFoundException();
-            }
-            return _mapper.Map<IEnumerable<BookingGetDTO>>(bookings);
+            return await _context.BookingRepository.GetAllBookingsAsync();
         }
     }
 }

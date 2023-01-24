@@ -1,36 +1,40 @@
-﻿using Application.Bookings.DTO;
-using Application.Common.Exceptions;
+﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using AutoMapper;
 using Domain.Entities;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.Bookings.Commands.Update
 {
-    public class UpdateBookingCommandHandler : IRequestHandler<UpdateBookingCommand, BookingPutDTO>
+    public class UpdateBookingCommandHandler : IRequestHandler<UpdateBookingCommand, Booking>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public UpdateBookingCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        { 
+        public UpdateBookingCommandHandler(IUnitOfWork unitOfWork)
+        {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
-        public async Task<BookingPutDTO> Handle(UpdateBookingCommand request, CancellationToken cancellationToken)
+        public async Task<Booking> Handle(UpdateBookingCommand request, CancellationToken cancellationToken)
         {
             var booking = await _unitOfWork.BookingRepository.GetBookingByIdAsync(request.Id);
             if (booking == null)
             {
-                throw new ObjectNotFoundException(nameof(RoomType), request.Id);
+                throw new ObjectNotFoundException($"Booking with ID '{request.Id}' not found.");
             }
-
-            _mapper.Map(request, booking);
+            booking.RoomId = request.RoomId;
+            booking.GuestId = request.GuestId;
+            booking.StartDate = request.StartDate;
+            booking.EndDate = request.EndDate;
+            booking.CheckedIn = request.CheckedIn;
+            booking.TotalCost = request.TotalCost;
             await _unitOfWork.BookingRepository.UpdateBookingAsync(booking);
             await _unitOfWork.SaveAsync();
-
-            return _mapper.Map<BookingPutDTO>(booking);
+            return booking;
         }
     }
 }

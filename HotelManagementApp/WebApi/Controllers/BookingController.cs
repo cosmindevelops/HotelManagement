@@ -6,9 +6,6 @@ using Application.Bookings.Queries.GetBookingById;
 using Application.DTO;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Application.Common.Exceptions;
-using Application.Bookings.DTO;
-using Application.Bookings.Queries.CheckInBooking;
 
 namespace WebApi.Controllers
 {
@@ -18,135 +15,67 @@ namespace WebApi.Controllers
     {
         private readonly IMediator _mediator;
 
-
         public BookingController(IMediator mediator)
         {
             _mediator = mediator;
         }
-        //DONE
+
         [HttpGet]
         public async Task<IActionResult> GetAllBookings()
         {
-            try
-            {
-                var result = await _mediator.Send(new GetAllBookingsQuery());
-                return Ok(result);
-            }
-            catch (BookingNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var bookings = await _mediator.Send(new GetAllBookingsQuery());
+            return Ok(bookings);
         }
-        //DONE
+
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetBookingById(int id)
         {
-            try
+            var booking = await _mediator.Send(new GetBookingByIdQuery { Id = id });
+            if (booking == null)
             {
-                var result = await _mediator.Send(new GetBookingByIdQuery ( id ));
-                return Ok(result);
+                return NotFound();
             }
-            catch (BookingNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            return Ok(booking);
         }
-        //TODO - to check
+
         [HttpPost]
         public async Task<IActionResult> CreateBooking([FromBody] CreateBookingCommand command)
         {
-            try
+            var booking = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetBookingById), new { id = booking.Id }, new BookingDTO
             {
-                var result = await _mediator.Send(command);
-                return Ok(result);
-            }
-            catch (InvalidBookingDateException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (InvalidBookingPeriodException ex) 
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+                Id = booking.Id,
+                RoomId = booking.RoomId,
+                GuestId = booking.GuestId,
+                StartDate = booking.StartDate,
+                EndDate = booking.EndDate,
+                TotalCost = booking.TotalCost
+            });
         }
-        
-        //TODO
+
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingCommand command)
         {
-            try
+            command.Id = id;
+            var booking = await _mediator.Send(command);
+            if (booking == null)
             {
-                command.Id = id;
-                var booking = await _mediator.Send(command);
-                return Ok(booking);
+                return NotFound();
             }
-            catch (ObjectNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }        
+            return NoContent();
         }
-        //TODO- to check
-        [HttpPut]
-        [Route("{id}/checkin")]
-        public async Task<IActionResult> CheckInBooking(int id, [FromBody] CheckInBookingCommand command)
-        {
-            command.BookingId = id;
-            try
-            {
-                var result = await _mediator.Send(command);
-                return Ok(result);
-            }
-            catch (InvalidBookingException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        //TODO - to check
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
-            try
+            var booking = await _mediator.Send(new DeleteBookingCommand { Id = id });
+            if (booking == null)
             {
-                var booking = await _mediator.Send(new DeleteBookingCommand(id));
-                return Ok(booking);
+                return NotFound();
             }
-            catch (ObjectNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-            
+            return NoContent();
         }
     }
 }

@@ -12,40 +12,40 @@ namespace Infrastructure.InMemoryRepository
             _roomTypes = new List<RoomType>();
         }
 
-        public async Task<RoomType> GetRoomTypeByIdAsync(int id)
+        public Task<RoomType> GetRoomTypeByIdAsync(int id)
         {
-            return await Task.FromResult(_roomTypes.SingleOrDefault(rt => rt.Id == id));
+            return Task.FromResult(_roomTypes.SingleOrDefault(rt => rt.Id == id));
         }
 
-        public async Task<IEnumerable<RoomType>> GetAllRoomTypesAsync()
+        public Task<List<RoomType>> GetAllRoomTypesAsync()
         {
-            return await Task.FromResult(_roomTypes.AsEnumerable());
+            return Task.FromResult(_roomTypes);
         }
 
-        public async Task AddRoomTypeAsync(RoomType roomType)
+        public Task AddRoomTypeAsync(RoomType roomType)
         {
             _roomTypes.Add(roomType);
-             await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
-        public async Task UpdateRoomTypeAsync(RoomType roomType)
+        public Task UpdateRoomTypeAsync(RoomType roomType)
         {
             var index = _roomTypes.FindIndex(rt => rt.Id == roomType.Id);
             if (index != -1)
             {
                 _roomTypes[index] = roomType;
             }
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteRoomTypeAsync(int id)
+        public Task DeleteRoomTypeAsync(int id)
         {
             var index = _roomTypes.FindIndex(rt => rt.Id == id);
             if (index != -1)
             {
                 _roomTypes.RemoveAt(index);
             }
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }
