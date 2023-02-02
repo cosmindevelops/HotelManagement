@@ -7,16 +7,13 @@ namespace Application.Bookings.Commands.Create
 {
     public class CreateBookingCommand : IRequest<BookingPostDTO>
     {
-        public BookingPostDTO Booking { get; set; }
+
+        public int RoomId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public CreateBookingCommand(BookingPostDTO booking, string firstName, string lastName)
-        {
-            Booking = booking;
-            FirstName = firstName;
-            LastName = lastName;
-            Booking.CheckedIn = false;
-        }
+
     }
 
 

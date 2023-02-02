@@ -21,17 +21,18 @@ namespace Application.Bookings.Commands.Create
 
         public async Task<BookingPostDTO> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
         {
-            // StartDate and EndDate can't be in the past
-            if (DateTime.Now > request.Booking.StartDate || DateTime.Now > request.Booking.EndDate)
+            // StartDate or EndDate can't be in the past
+            if (DateTime.Now > request.StartDate || DateTime.Now > request.EndDate)
             {
                 throw new InvalidBookingDateException();
             }
             // StartDate can't be after EndDate
-            if (request.Booking.StartDate > request.Booking.EndDate)
+            if (request.StartDate > request.EndDate)
             {
                 throw new InvalidBookingPeriodException();
             }
             
+            // Get Guest from DB or create a new one
             var guest = await _unitOfWork.GuestRepository.GetGuestByFullName(request.FirstName, request.LastName);
             if (guest == null)
             {
@@ -42,19 +43,29 @@ namespace Application.Bookings.Commands.Create
                 };
                 await _unitOfWork.GuestRepository.AddGuestAsync(guest);
                 await _unitOfWork.SaveAsync();
-            }
+            }         
+            //guest = await _unitOfWork.GuestRepository.GetGuestByFullName(request.FirstName, request.LastName);
+            //_mapper.Map<GuestAndBookingDTO>(guest);
             
-            guest = await _unitOfWork.GuestRepository.GetGuestByFullName(request.FirstName, request.LastName);
-            _mapper.Map<GuestAndBookingDTO>(guest);
+            var guestDto = _mapper.Map<GuestAndBookingDTO>(guest);
+            int guestId = guestDto.Id;
+            
+            // Get room from DB
+            var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(request.RoomId);
 
-            int guestId = guest.Id;
-            request.Booking.GuestId = guestId;
-            
-            var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(request.Booking.RoomId);
-            var totalPrice = room.RoomType.Price;
-            
-            request.Booking.TotalCost = totalPrice;
-            var booking = _mapper.Map<Booking>(request.Booking);
+            // Calculate the total cost of the booking
+            var startDate = request.StartDate;
+            var endDate = request.EndDate;
+            TimeSpan duration = endDate - startDate;
+            var numberOfDays = (int)duration.TotalDays;
+            var totalCost = numberOfDays * room.RoomType.Price;
+
+            var booking = new Booking { GuestId = guestId,
+                                    TotalCost = totalCost,
+                                    CheckedIn = false,
+                                    RoomId=request.RoomId,
+                                    StartDate = request.StartDate,
+                                    EndDate = request.EndDate};
 
             await _unitOfWork.BookingRepository.AddBookingAsync(booking);
             await _unitOfWork.SaveAsync();

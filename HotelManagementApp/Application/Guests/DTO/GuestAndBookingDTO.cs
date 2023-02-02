@@ -1,4 +1,5 @@
 ﻿using Application.Bookings.DTO;
+using Domain.Entities;
 
 namespace Application.Guests.DTO
 {

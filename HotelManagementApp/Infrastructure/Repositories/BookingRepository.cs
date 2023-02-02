@@ -47,5 +47,12 @@ namespace Infrastructure.Repositories
             _context.Bookings.Remove(booking);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Booking>> GetAllBookingsByGuestId(int guestId)
+        {
+            return await _context.Bookings
+                .Where(b => b.GuestId == guestId)
+                .ToListAsync();
+        }
     }
 }

@@ -47,5 +47,10 @@ namespace Infrastructure.InMemoryRepository
             }
             await Task.CompletedTask;
         }
+
+        public Task<IEnumerable<Booking>> GetAllBookingsByGuestId(int guestId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

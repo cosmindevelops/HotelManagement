@@ -12,6 +12,7 @@ namespace Application.Profiles
     {
         public BookingProfile()
         {
+            
             CreateMap<Booking, BookingGetDTO>();
             CreateMap<BookingGetDTO, Booking>();
             CreateMap<Booking, BookingPutDTO>();

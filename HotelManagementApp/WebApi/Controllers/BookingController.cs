@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Common.Exceptions;
 using Application.Bookings.DTO;
 using Application.Bookings.Queries.CheckInBooking;
+using Application.Bookings.Queries.GetAllBookingsByGuestId;
 
 namespace WebApi.Controllers
 {
@@ -59,7 +60,28 @@ namespace WebApi.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        //TODO - to check
+
+        [HttpGet]
+        [Route("guest/{guestId}")]
+        public async Task<IActionResult> GetAllBookingsByGuestId(int guestId)
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetAllBookingsByGuestIdQuery { GuestId = guestId });
+                return Ok(result);
+            }
+            catch (BookingNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        
+        //DONE
         [HttpPost]
         public async Task<IActionResult> CreateBooking([FromBody] CreateBookingCommand command)
         {
@@ -82,7 +104,7 @@ namespace WebApi.Controllers
             }
         }
         
-        //TODO - to check
+        //DONE
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingCommand command)

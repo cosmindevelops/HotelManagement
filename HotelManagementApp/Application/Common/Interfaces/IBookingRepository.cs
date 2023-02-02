@@ -8,6 +8,8 @@ namespace Application.Common.Interfaces
 
         Task<IEnumerable<Booking>> GetAllBookingsAsync();
 
+        Task<IEnumerable<Booking>> GetAllBookingsByGuestId(int guestId);
+
         Task AddBookingAsync(Booking booking);
 
         Task UpdateBookingAsync(Booking booking);

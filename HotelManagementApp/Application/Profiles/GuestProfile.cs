@@ -12,6 +12,7 @@ namespace Application.Profiles
     {
         public GuestProfile()
         {
+
             CreateMap<Guest, GuestGetDTO>();
             CreateMap<GuestGetDTO, Guest>();
             CreateMap<CreateGuestCommand, Guest>();

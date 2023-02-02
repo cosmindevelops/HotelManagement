@@ -30,7 +30,6 @@ namespace Application.Bookings.Queries.CheckInBooking
                 throw new BookingNotFoundException();
             }
 
-
             if (booking.Guest.LastName != request.GuestLastName)
             {
                 throw new InvalidBookingGuestNameException();
